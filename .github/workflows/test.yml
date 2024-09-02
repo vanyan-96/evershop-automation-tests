@@ -37,7 +37,7 @@ jobs:
 
       - name: Start Docker Compose
         run: |
-          docker-compose -f docker-compose.yml up -d
+          docker-compose up -d
 
       - name: Run tests
         run: |
@@ -46,4 +46,4 @@ jobs:
 
       - name: Shutdown Docker Compose
         run: |
-          docker-compose -f docker-compose.yml down
+          docker-compose down
