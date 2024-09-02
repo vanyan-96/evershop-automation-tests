@@ -29,11 +29,10 @@ jobs:
           source venv/bin/activate
           pip install -r requirements.txt
 
-      - name: Install Docker
+      - name: Install containerd.io and Docker
         run: |
-          sudo apt-get remove -y containerd
           sudo apt-get update
-          sudo apt-get install -y docker.io
+          sudo apt-get install -y containerd.io docker-ce docker-ce-cli
 
       - name: Install Docker Compose
         run: |
