@@ -7,6 +7,10 @@ import pytest
 def test_login():
     options = webdriver.ChromeOptions()
     options.add_argument("--disable-search-engine-choice-screen")
+    options.add_argument("--headless")  # Exécuter Chrome en mode headless
+    options.add_argument("--no-sandbox")  # Nécessaire pour certains environnements CI
+    options.add_argument("--disable-dev-shm-usage")  # Éviter les problèmes de mémoire partagée
+    options.add_argument("--remote-debugging-port=9222")  # Pour le débogage
     driver = webdriver.Chrome(options=options)
     driver.get("http://localhost:3000/admin")
     
