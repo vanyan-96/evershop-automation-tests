@@ -3,14 +3,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from test_products import TestProducts
+from selenium import webdriver
 
 class TestAddProduct(TestProducts):
 
     def test_add_new_product(self, driver):
-        # Assurez-vous que vous êtes sur la page des produits
-        self.test_click_on_product(driver)
-        
-        # Cliquer sur le bouton "New Product"
         new_product_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//a[@href='/admin/products/new' and contains(@class, 'button primary')]"))
         )
@@ -27,14 +24,23 @@ class TestAddProduct(TestProducts):
         sku_input = driver.find_element(By.ID, "sku")
         price_input = driver.find_element(By.ID, "price")
         weight_input = driver.find_element(By.ID, "weight")
+        qty = driver.find_element(By.ID, "qty")
+        urlKey = driver.find_element(By.ID, "urlKey")
         
         name_input.send_keys("Test Product")
         sku_input.send_keys("TP-12345")
         price_input.send_keys("99.99")
         weight_input.send_keys("1.5")
 
+
         # Sélectionner la catégorie du produit
         select_category = driver.find_element(By.XPATH, "//a[text()='Select category']")
+        select_category.click()
+        select_category = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".flex.justify-start.gap-1.items-center"))
+        )
+
+        select_category = select_category.find_elements(By.TAG_NAME, "a")[1]
         select_category.click()
         # Simuler la sélection de la catégorie, en fonction de l'implémentation du sélecteur
         
@@ -45,8 +51,11 @@ class TestAddProduct(TestProducts):
         tax_class_option.click()
 
         # Ajouter une description
-        description_input = driver.find_element(By.XPATH, "//textarea[@id='description']")
-        description_input.send_keys("This is a test product description.")
+        description_input = driver.find_element(By.CSS_SELECTOR, "div.ck-content")
+        driver.execute_script("arguments[0].innerHTML = '<p>This is a test product description.</p>'", description_input)
+
+        qty.send_keys("5")
+        urlKey.send_keys("produitTest")
 
         # Soumettre le formulaire
         save_button = driver.find_element(By.XPATH, "//button[contains(@class, 'button primary') and contains(., 'Save')]")
@@ -54,6 +63,8 @@ class TestAddProduct(TestProducts):
 
         # Vérifier que le produit a été créé avec succès (Cela dépend de la façon dont la page se comporte après la soumission)
         success_message = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, "//div[contains(text(), 'Product created successfully')]"))
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".Toastify__toast-body"))
         )
-        assert success_message.is_displayed(), "Product was not created successfully"
+        assert success_message.text == "Product saved successfully!", "Product was not created successfully"
+
+
