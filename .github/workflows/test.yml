@@ -52,12 +52,15 @@ jobs:
         run: |
           docker-compose up -d
           docker-compose ps
-          sleep 10 # Attendre 10 secondes pour s'assurer que les services sont démarrés
+          until curl -s http://localhost:3000/admin > /dev/null; do
+            echo "Waiting for service to be available..."
+            sleep 5
+          done
 
       - name: Run tests
         run: |
           source venv/bin/activate
-          pytest
+          pytest --maxfail=5 --disable-warnings
 
       - name: Shutdown Docker Compose
         run: |
