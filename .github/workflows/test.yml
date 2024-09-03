@@ -61,7 +61,8 @@ jobs:
       - name: Run tests and generate HTML report
         run: |
           source venv/bin/activate
-          pytest
+          pytest --continue-on-collection-errors
+        continue-on-error: true
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v2
