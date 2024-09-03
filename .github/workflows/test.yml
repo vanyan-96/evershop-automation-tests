@@ -43,6 +43,15 @@ jobs:
         run: |
           docker-compose up -d
 
+     - name: Wait for evershop to be ready
+        run: |
+          echo "Attente du démarrage du service evershop..."
+          for i in {1..5}; do
+            nc -zv localhost 3000 && break
+            echo "Attente de la disponibilité de localhost:3000..."
+            sleep 1
+          done
+
       - name: Run tests
         run: |
           source venv/bin/activate
