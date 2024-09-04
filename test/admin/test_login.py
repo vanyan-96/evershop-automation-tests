@@ -12,8 +12,8 @@ class TestLogin:
         password_input = driver.find_element(By.NAME, "password")
         login_button = driver.find_element(By.XPATH, "//button[@type='submit']")
     
-        email_input.send_keys("test@test.fr")
-        password_input.send_keys("tesoijdzat")
+        email_input.send_keys("rosievanyan@gmail.com")
+        password_input.send_keys("")
         login_button.click()
     
         WebDriverWait(driver, 10).until(EC.title_contains("Dashboard"))
